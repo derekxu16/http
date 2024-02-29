@@ -47,6 +47,18 @@ void main() {
       backingMap['requestEndTimestamp'],
       DateTime.parse('2024-03-23').microsecondsSinceEpoch,
     );
+
+    final fakeProfile = FakeHttpClientRequestProfile(
+      requestStartTime: DateTime.parse('2024-03-21'),
+      requestMethod: 'GET',
+      requestUri: 'https://www.example.com',
+    );
+    fakeProfile.requestData.close(DateTime.parse('2024-03-23'));
+
+    expect(
+      fakeProfile.requestData.endTime,
+      DateTime.parse('2024-03-23'),
+    );
   });
 
   test('populating HttpClientRequestProfile.requestData.connectionInfo',

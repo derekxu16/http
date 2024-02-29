@@ -54,8 +54,10 @@ final class HttpClientRequestProfile {
     _updated();
   }
 
+  late HttpProfileRequestData _requestData;
+
   /// Details about the request.
-  late final HttpProfileRequestData requestData;
+  HttpProfileRequestData get requestData => _requestData;
 
   /// Details about the response.
   late final HttpProfileResponseData responseData;
@@ -74,11 +76,11 @@ final class HttpClientRequestProfile {
     _data['requestUri'] = requestUri;
     _data['events'] = <Map<String, dynamic>>[];
     _data['requestData'] = <String, dynamic>{};
-    requestData = HttpProfileRequestData._(_data, _updated);
+    _requestData = HttpProfileRequestData._(_data, _updated);
     _data['responseData'] = <String, dynamic>{};
     responseData = HttpProfileResponseData._(
         _data['responseData'] as Map<String, dynamic>, _updated);
-    _data['_requestBodyStream'] = requestData._body.stream;
+    _data['_requestBodyStream'] = _requestData._body.stream;
     _data['_responseBodyStream'] = responseData._body.stream;
     // This entry is needed to support the updatedSince parameter of
     // ext.dart.io.getHttpProfile.
@@ -110,4 +112,21 @@ final class HttpClientRequestProfile {
     addHttpClientProfilingData(requestProfile._data);
     return requestProfile;
   }
+}
+
+final class FakeHttpClientRequestProfile extends HttpClientRequestProfile {
+  FakeHttpClientRequestProfile({
+    required super.requestStartTime,
+    required super.requestMethod,
+    required super.requestUri,
+  }) : super._() {
+    _requestData = FakeHttpProfileRequestData(
+      data: _data,
+      updated: _updated,
+    );
+  }
+
+  @override
+  FakeHttpProfileRequestData get requestData =>
+      _requestData as FakeHttpProfileRequestData;
 }

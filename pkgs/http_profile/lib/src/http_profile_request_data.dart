@@ -181,3 +181,13 @@ final class HttpProfileRequestData {
         (endTime ?? DateTime.now()).microsecondsSinceEpoch;
   }
 }
+
+final class FakeHttpProfileRequestData extends HttpProfileRequestData {
+  FakeHttpProfileRequestData({
+    required Map<String, dynamic> data,
+    required void Function() updated,
+  }) : super._(data, updated);
+
+  DateTime get endTime =>
+      DateTime.fromMicrosecondsSinceEpoch(_data['requestEndTimestamp'] as int);
+}
